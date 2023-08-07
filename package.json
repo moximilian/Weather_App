@@ -1,6 +1,7 @@
 {
   "name": "weather_app",
   "version": "0.1.0",
+  "homepage":"https://moximilian.github.io/Weather_App",
   "private": true,
   "dependencies": {
     "@pbe/react-yandex-maps": "^1.2.4",
