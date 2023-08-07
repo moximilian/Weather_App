@@ -15,12 +15,30 @@ interface IWeather {
 interface ICity{
     city:string;
 }
+interface ICoords {
+    lon: number;
+    lat:number
+}
 export const MyGlobalContext = createContext<{
     weather: IWeather | undefined;
     loading:boolean;
-    formData:ICity|undefined;
-    setWeather: (value: IWeather) => void;
+    formData:ICity|undefined | ICoords;
+    showForm:boolean;
+    error:string,
+    setWeather: (value: IWeather|undefined) => void;
     setLoading: (value: boolean) => void;
-    setFormData: (value:ICity ) => void;
-}>({ weather: undefined, loading:false,formData:undefined, setWeather: () => { },setLoading: () => { },setFormData: () => { } });
+    setFormData: (value:ICity|ICoords ) => void;
+    setShowForm:(value:boolean)=>void;
+    setError:(value:string)=>void;
+}>({ weather: undefined, 
+    loading:false,
+    formData:undefined,
+    showForm:true,
+    error:'', 
+    setWeather: () => { },
+    setLoading: () => { },
+    setFormData: () => { },
+    setShowForm: () => { }, 
+    setError: () => { }, 
+});
 export const useGlobalContext = () => useContext(MyGlobalContext)

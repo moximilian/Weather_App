@@ -1,8 +1,11 @@
 import Form from './additional/Form'
+import Map from './additional/Map'
 import Result from './additional/Result';
 import { useState } from 'react';
 import { MyGlobalContext } from '../functions/useGlobalContext';
- interface IWeather {
+import Header from './Header';
+import Footer from './Footer';
+interface IWeather {
     cloud_pct: number,
     temp: number,
     feels_like: number,
@@ -13,22 +16,52 @@ import { MyGlobalContext } from '../functions/useGlobalContext';
     wind_degrees: number,
     sunrise: number,
     sunset: number,
-    error:string,
+    error: string,
 }
-interface ICity{
-    city:string;
+interface ICity {
+    city: string;
+}
+interface ICoords {
+    lon: number;
+    lat: number
+}
+interface MapProps {
+    show: string;
 }
 
 export default function Main() {
     const [weather, setWeather] = useState<IWeather>();
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState<ICity>();
+    const [formData, setFormData] = useState<ICity | ICoords>();
+    const [showForm, setShowForm] = useState(true);
+    const [error, setError] = useState('');
+    const props: MapProps[] = [
+        { show: 'yes' },
+        { show: 'no' },
+    ];
     return <>
-        <div className='fadeInUp-animation'>
-            <MyGlobalContext.Provider value={ {weather,loading, formData, setWeather,setLoading, setFormData} }>
-                < Form />
+        <MyGlobalContext.Provider value={{ weather, 
+                                        loading, 
+                                        formData, 
+                                        showForm, 
+                                        error, 
+                                        setWeather, 
+                                        setLoading, 
+                                        setFormData, 
+                                        setShowForm, 
+                                        setError }}>
+            <Header />
+
+            <div className='fadeInUp-animation'>
+                {showForm ? <Form /> : ''}
+                <div className='resulting_area'>
+                {(formData && 'lat' in formData ? < Map show={props[1].show} /> : <Map show={props[0].show} />)}
                 < Result />
-            </MyGlobalContext.Provider>
-        </div>
+                </div>
+                
+            </div >
+        </MyGlobalContext.Provider>
+
+        <Footer />
     </>;
 }
