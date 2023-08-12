@@ -1,19 +1,24 @@
 import React from 'react'
 import './App.css';
 import Main from './components/Main';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, HashRouter} from 'react-router-dom'
 import About from './components/additional/About';
+import Here from './components/Here';
+
 
 
 
 export default function App() {
+
+
   return <>
-    <Router>
+    <HashRouter>
       <Routes>
-        <Route path='https://moximilian.github.io/Weather_App/' element={<Main />} />
-        <Route path='https://moximilian.github.io/Weather_App/about' element={<About />} />
+          <Route path='/' element={<Main />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/here' element={<Here />} />
       </Routes>
-    </Router>
+    </HashRouter>
   </>
 }
 

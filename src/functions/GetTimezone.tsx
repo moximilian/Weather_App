@@ -1,23 +1,11 @@
-interface ICoords {
-    [index: number]: {
-        name: string,
-        latitude: number,
-        longitude: number,
-        country: string,
-        population: number,
-        is_capital: boolean,
-    }
+interface ITimezone {
+    timezone: string,
+    city: string,
+};
 
-}
-
-interface ICoordsShort {
-    lon: number,
-    lat: number,
-}
-
-export default async function GetCoords(city: string) {
+export default async function GetTimezone(city: string) {
     var url: string = ''
-    url = 'https://api.api-ninjas.com/v1/city?name=' + city;
+    url = 'https://api.api-ninjas.com/v1/timezone?city=' + city;
     const apiKey = 'sDFA8fVkJ14CcU/ldssVJA==3RembhHoW61D2auk';
     const headers: Headers = new Headers();
     headers.set('Content-Type', 'application/json')
@@ -31,6 +19,6 @@ export default async function GetCoords(city: string) {
     return fetch(request)
         .then(res => res.json())
         .then(res => {
-            return res as ICoords
+            return res as ITimezone
         })
 }

@@ -1,10 +1,12 @@
-import Form from './additional/Form'
 import Map from './additional/Map'
 import Result from './additional/Result';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { MyGlobalContext } from '../functions/useGlobalContext';
 import Header from './Header';
 import Footer from './Footer';
+import GetWeather from '../functions/GetWeather';
+import useRunOnce from '../functions/useRunOnce';
+
 interface IWeather {
     cloud_pct: number,
     temp: number,
@@ -29,7 +31,7 @@ interface MapProps {
     show: string;
 }
 
-export default function Main() {
+export default function Here() {
     const [weather, setWeather] = useState<IWeather>();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<ICity | ICoords>();
@@ -39,6 +41,35 @@ export default function Main() {
         { show: 'yes' },
         { show: 'no' },
     ];
+
+    const location = useRef<ICoords>()
+    useRunOnce({
+        fn: () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        location.current = { 'lat': pos.coords.latitude, 'lon': pos.coords.longitude };
+                        setLoading(true);
+                        setFormData(location.current);
+                        GetWeather(location.current)
+                            .then(res => {
+                                if (res.sunrise) {
+                                    setWeather(res)
+                                }
+                                setLoading(false);
+                            })
+                    },
+                    (error) => {
+                        setError('Error getting user location' + error);
+                    }
+                );
+            }
+        }
+    });
+
+
+
+
     return <>
         <MyGlobalContext.Provider value={{
             weather,
@@ -54,8 +85,8 @@ export default function Main() {
         }}>
             <Header />
 
-            <div className='fadeInUp-animation flex-columnNogap'>
-                <Form />
+            <div className='fadeInUp-animation'>
+
                 <div className='resulting_area'>
                     < Result />
                     {(formData && 'lat' in formData ? < Map show={props[1].show} /> : <Map show={props[0].show} />)}

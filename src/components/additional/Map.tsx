@@ -1,16 +1,9 @@
 import { YMaps, Map as YAMap } from '@pbe/react-yandex-maps'
 import { MyGlobalContext } from '../../functions/useGlobalContext';
-import { useContext, useEffect, useState, useRef, useMemo } from 'react'
+import { useContext, useState, useRef, useMemo } from 'react'
 import GetCoords from '../../functions/GetCoords';
 
-interface ICoords {
-    name: string,
-    latitude: number,
-    longitude: number,
-    country: string,
-    population: number,
-    is_capital: boolean,
-}
+
 
 interface MapProps {
     show: string;
@@ -21,21 +14,17 @@ interface ICoordsShort {
 }
 
 export default function Map({ show: props }: MapProps) {
-    const { formData, error, weather } = useContext(MyGlobalContext);
+    const { formData, error, weather, loading } = useContext(MyGlobalContext);
 
     const [Coords, setCoords] = useState<ICoordsShort>({ lat: 0, lon: 0 });
     // const [isUpdatedCoords, SetUpdatedCoords] = useState(false);
-
     const CurCoords = useRef<ICoordsShort>()
 
 
-    // var lat: number = 55.45;
-    // var lon: number = 37.36;
 
 
 
 
-    console.log('error in maps', error.length, 'daklcn');
     useMemo(() => {
         if (error === '') {
             if (formData && 'lat' in formData && props === 'no') {
@@ -58,20 +47,36 @@ export default function Map({ show: props }: MapProps) {
     if (weather === undefined && formData && !('lat' in formData)) {
         CurCoords.current = undefined;
     }
+    const getMapWidth = (): string => {
+
+        if (loading || weather === undefined) {
+            if (CurCoords.current) {
+                CurCoords.current.lon -= 0.065;
+            }
+            return 'center_map_big';
+        }
+        if (loading || weather !== undefined) {
+            if (CurCoords.current) {
+                CurCoords.current.lon += 0.065;
+            }
+            return 'center_map_small';
+        } else return '';
+
+    }
 
     return <>
 
         {CurCoords.current && error === '' ?
             <>
                 <YMaps>
-                    <div className='center_map'>
+                    <div className={getMapWidth()}>
                         <YAMap state={{ center: [CurCoords.current.lat, CurCoords.current.lon], zoom: 12 }} width='100%' height='100%' />
                     </div>
 
                 </YMaps></> :
             <>
                 <YMaps>
-                    <div className='center_map'>
+                    <div className={getMapWidth()}>
                         <YAMap state={{ center: [Coords?.lat, Coords?.lon], zoom: 2, }} width='100%' height='100%' />
                     </div>
                 </YMaps>

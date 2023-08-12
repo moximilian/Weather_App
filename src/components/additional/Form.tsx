@@ -2,12 +2,11 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { MyGlobalContext } from "../../functions/useGlobalContext"
 import data from '../../files/phrases.json';
 import GetWeather from '../../functions/GetWeather';
-import GetCoords from '../../functions/GetCoords';
 
 
 const Form: React.FC = () => {
     const cityRef = useRef<HTMLInputElement>(null);
-    const { setWeather, setLoading, setFormData, setError, error, loading } = useContext(MyGlobalContext);
+    const { setWeather, setLoading, setFormData, setError, error } = useContext(MyGlobalContext);
     const [phrases, setPhrases] = useState(['']);
 
     useEffect(() => {
@@ -32,23 +31,16 @@ const Form: React.FC = () => {
             if (error === '') {
                 setFormData({ 'city': city });
                 setLoading(true);
-                // console.log(loading);
                 GetWeather({ 'city': city })
                     .then(res => {
-                        // console.log(res);
+                        setLoading(false);
                         if ('sunset' in res) {
                             setWeather(res)
                         } else {
                             setError('there is no city as ' + city);
                             setWeather(undefined);
                         }
-                        setLoading(false);
-                        console.log(error);
-                        
                     });
-                
-                // console.log(loading);
-
             }
         }
 

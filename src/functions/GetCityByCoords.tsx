@@ -1,29 +1,20 @@
-interface ICoords {
+interface ICity {
     [index: number]: {
-        name: string,
-        latitude: number,
-        longitude: number,
         country: string,
-        population: number,
-        is_capital: boolean,
+        name: string,
+        state: string,
     }
 
 }
-
-interface ICoordsShort {
-    lon: number,
-    lat: number,
-}
-
-export default async function GetCoords(city: string) {
+export default async function GetCoords(data: { lat: number, lon: number }) {
     var url: string = ''
-    url = 'https://api.api-ninjas.com/v1/city?name=' + city;
+
+    url = 'https://api.api-ninjas.com/v1/reversegeocoding?lat=' + data.lat + '&lon=' + data.lon;
     const apiKey = 'sDFA8fVkJ14CcU/ldssVJA==3RembhHoW61D2auk';
     const headers: Headers = new Headers();
     headers.set('Content-Type', 'application/json')
     headers.set('Accept', 'application/json')
     headers.set('X-Api-Key', apiKey)
-
     const request: RequestInfo = new Request(url, {
         method: "GET",
         headers: headers
@@ -31,6 +22,6 @@ export default async function GetCoords(city: string) {
     return fetch(request)
         .then(res => res.json())
         .then(res => {
-            return res as ICoords
+            return res as ICity
         })
 }

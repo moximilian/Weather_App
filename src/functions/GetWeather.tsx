@@ -25,14 +25,11 @@ export default async function GetWeather(data: ICoords | ICity): Promise<IWeathe
     } else {
         url = 'https://api.api-ninjas.com/v1/weather?lat=' + data.lat + '&lon=' + data.lon;
     }
-    // const city = data.city
     const apiKey = 'sDFA8fVkJ14CcU/ldssVJA==3RembhHoW61D2auk';
-
     const headers: Headers = new Headers();
     headers.set('Content-Type', 'application/json')
     headers.set('Accept', 'application/json')
     headers.set('X-Api-Key', apiKey)
-
     const request: RequestInfo = new Request(url, {
         method: "GET",
         headers: headers
