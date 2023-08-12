@@ -103,7 +103,7 @@ export default function Result() {
     }
     const backgroundEImage: CSS.Properties = {
 
-        backgroundImage: `url(${background})`,
+        backgroundImage:`url(.${background})`,
         backgroundSize: 'cover',
         display: "flex",
         flexWrap: "wrap",
